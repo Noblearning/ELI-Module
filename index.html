@@ -21,7 +21,7 @@
     <![endif]-->
 
     <script id="__ENTRY__" type="application/json">
-      {".js":["rise/22a048c1.js"]}
+      {".js":["rise/f8a45d57.js"]}
     </script>
 
     <script id="__REMOTE_ENTRIES__" type="application/json">
@@ -247,7 +247,7 @@ function compress(data) {
     return JSON.stringify({
       v: 2,
       d: lzwCompress.pack(JSON.stringify(data)),
-      cpv: "3A3v_pIz"
+      cpv: "1T6ydVHY"
     });
   } catch(e) {
     return '';
@@ -367,8 +367,10 @@ function finishStoryline(id, passed, isQuiz, score) {
   }
 }
 
-function stripHtml(title) {
-  return title.replace(/<(?:.|\n)*?>/gm, '');
+function sanitizeForUri(title) {
+  var strippedTitle = title.replace(/<(?:.|\n)*?>/gm, '');
+  var sanitizedTitle = strippedTitle.replace(/[^a-zA-Z0-9-_.~]/g, '-');
+  return sanitizedTitle;
 }
 
 function shorten(title) {
@@ -376,13 +378,13 @@ function shorten(title) {
 }
 
 function buildResponseIdentifier(response) {
-  var title = stripHtml(response.title);
+  var title = sanitizeForUri(response.title);
   return LMSProxy.CreateResponseIdentifier(shorten(title), title);
 }
 
 function buildMatchingResponse(response) {
-  var sourceTitle = stripHtml(response.source.title);
-  var targetTitle = stripHtml(response.target.title);
+  var sourceTitle = sanitizeForUri(response.source.title);
+  var targetTitle = sanitizeForUri(response.target.title);
 
   var source =
     LMSProxy.CreateResponseIdentifier(shorten(sourceTitle), sourceTitle);
